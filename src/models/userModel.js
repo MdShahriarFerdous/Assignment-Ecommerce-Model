@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema; //same as: mongoose.Schema.Types.ObjectId
+const CartItem = require("./cartItemModel");
+const Order = require("./Order");
 
 const userSchema = new mongoose.Schema(
 	{
@@ -18,10 +20,10 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("remove", async function (next) {
 	try {
 		// Removing associated cart items
-		await mongoose.model("CartItem").deleteMany({ user: this._id });
+		await CartItem.deleteMany({ user: this._id });
 
 		// Removing associated orders
-		await mongoose.model("Order").deleteMany({ user: this._id });
+		await Order.deleteMany({ user: this._id });
 		next();
 	} catch (error) {
 		next(error);
